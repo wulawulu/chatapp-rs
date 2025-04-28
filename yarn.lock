@@ -393,6 +393,11 @@
     "@vue/compiler-dom" "3.5.13"
     "@vue/shared" "3.5.13"
 
+"@vue/devtools-api@^6.0.0-beta.11", "@vue/devtools-api@^6.6.4":
+  version "6.6.4"
+  resolved "https://registry.npmmirror.com/@vue/devtools-api/-/devtools-api-6.6.4.tgz#cbe97fe0162b365edc1dba80e173f90492535343"
+  integrity sha512-sGhTPMuXqZ1rVOk32RylztWkfXTRhuS7vgAKv0zjqk8gbsHkJ7xfFf+jbySxt7tWObEJwyKaHMikV/WGDiQm8g==
+
 "@vue/reactivity@3.5.13":
   version "3.5.13"
   resolved "https://registry.npmmirror.com/@vue/reactivity/-/reactivity-3.5.13.tgz#b41ff2bb865e093899a22219f5b25f97b6fe155f"
@@ -574,6 +579,13 @@ vite@^6.0.3:
   optionalDependencies:
     fsevents "~2.3.3"
 
+vue-router@^4.5.1:
+  version "4.5.1"
+  resolved "https://registry.npmmirror.com/vue-router/-/vue-router-4.5.1.tgz#47bffe2d3a5479d2886a9a244547a853aa0abf69"
+  integrity sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==
+  dependencies:
+    "@vue/devtools-api" "^6.6.4"
+
 vue@^3.5.13:
   version "3.5.13"
   resolved "https://registry.npmmirror.com/vue/-/vue-3.5.13.tgz#9f760a1a982b09c0c04a867903fc339c9f29ec0a"
@@ -584,3 +596,10 @@ vue@^3.5.13:
     "@vue/runtime-dom" "3.5.13"
     "@vue/server-renderer" "3.5.13"
     "@vue/shared" "3.5.13"
+
+vuex@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.npmmirror.com/vuex/-/vuex-4.1.0.tgz#aa1b3ea5c7385812b074c86faeeec2217872e36c"
+  integrity sha512-hmV6UerDrPcgbSy9ORAtNXDr9M4wlNP4pEFKye4ujJF8oqgFFuxDCdOLS3eNoRTtq5O3hoBDh9Doj1bQMYHRbQ==
+  dependencies:
+    "@vue/devtools-api" "^6.0.0-beta.11"
