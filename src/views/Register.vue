@@ -15,7 +15,8 @@
 
       <div class="form-group">
         <label for="workspaceName">Workspace Name</label>
-        <input type="text" id="workspaceName" v-model="workspaceName" placeholder="Enter your workspace name" required />
+        <input type="text" id="workspaceName" v-model="workspaceName" placeholder="Enter your workspace name"
+          required />
       </div>
 
       <div class="form-group">
@@ -43,16 +44,20 @@ export default {
     };
   },
   methods: {
-    register() {
-      const userData = {
-        fullName: this.fullName,
-        email: this.email,
-        workspaceName: this.workspaceName,
-        password: this.password,
-      };
+    async register() {
+      try {
+        const user = await this.$store.dispatch('signup', {
+          email: this.email,
+          fullname: this.fullName,
+          password: this.password,
+          workspace: this.workspaceName,
+        });
 
-      console.log('User Data:', userData);
-      this.$router.push('/chat');
+        console.log('Signup successful, user:', user);
+        this.$router.push('/');
+      } catch (error) {
+        console.error('Register failed:', error);
+      }
     },
   },
 };
@@ -60,7 +65,8 @@ export default {
 
 <style scoped>
 .register {
-  width: 600px; /* Similar to login view for consistency */
+  width: 600px;
+  /* Similar to login view for consistency */
   margin: 120px auto;
   padding: 60px 50px;
   background-color: #ffffff;
