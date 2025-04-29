@@ -29,7 +29,7 @@ export default createStore({
     setUsers(state, users) {
       state.users = users;
     },
-    setMessages(state, {channelId, messages}) {
+    setMessages(state, { channelId, messages }) {
       state.messages[channelId] = messages;
     },
     addChannel(state, channel) {
@@ -141,14 +141,25 @@ export default createStore({
             },
           });
           let messages = response.data;
-          messages = messages.map((m) => {
-            m.sender = state.users[m.senderId];
-            return m;
-          });
           commit('setMessages', { channelId, messages });
-        }catch(error){
+        } catch (error) {
           console.error(`Failed to fetch messages for channel: ${channelId}`);
         }
+      }
+    },
+    async sendMessage({ state, commit }, payload) {
+      try {
+        console.log('Sending message:', payload);
+        const response = await axios.post(`${getUrlBase()}/chats/${payload.chatId}/messages`,payload,{
+          headers: {
+            Authorization: `Bearer ${state.token}`,
+          },
+        });
+        console.log('Message sent:', response.data);
+        commit('addMessage', { channelId: payload.channelId, message: response.data });
+      } catch (error) {
+        console.error('Failed to send message:', error);
+        throw error;
       }
     },
     addMessage({ commit }, { channelId, message }) {
@@ -167,6 +178,9 @@ export default createStore({
     },
     getUser(state) {
       return state.user;
+    },
+    getUserById: (state) => (id) => {
+      return state.users[id];
     },
     getWorkspace(state) {
       return state.workspace;
@@ -189,7 +203,7 @@ export default createStore({
       return state.messages[channelId] || [];
     },
     getMessagesForActiveChannel(state) {
-      if(!state.activeChannel) return [];
+      if (!state.activeChannel) return [];
       return state.messages[state.activeChannel.id] || [];
     },
   },

@@ -33,12 +33,30 @@ export default {
       message: '',
     };
   },
+  computed: {
+    activeChannelId() {
+      const channel = this.$store.state.activeChannel;
+      if (!channel) {
+        return null;
+      }
+      return channel.id;
+    },
+  },
   methods: {
     sendMessage() {
-      if (this.message.trim()) {
-        // Dispatch the message to Vuex store or perform the send operation
-        this.$store.dispatch('sendMessage', this.message);
+      if (this.message.trim()==='')return;
+
+      const payload = {
+        chatId: this.activeChannelId,
+        content: this.message,
+      };
+
+      try{
+        console.log('Sending message:', payload);
+        this.$store.dispatch('sendMessage', payload);
         this.message = '';
+      }catch(error){
+        console.error('Failed to send message:', error);
       }
     },
   },
