@@ -21,7 +21,7 @@
       <h2>Channels</h2>
       <ul>
         <li v-for="channel in channels"
-          :key="channel.id">
+          :key="channel.id" @click="selectChannel(channel.id)" :class="{ active: activeChannelId === channel.id }">
           # {{ channel.name }}
         </li>
       </ul>
@@ -30,9 +30,9 @@
     <div class="direct-messages">
       <h2>Direct Messages</h2>
       <ul>
-        <li v-for="c in singleChannels" :key="c.id">
-          <img :src="`https://ui-avatars.com/api/?name=${c.recipient.fullname.replace(' ', '+')}`" class="avatar" alt="Avatar" /> {{ c.recipient.fullname }}
-        </li>
+        <li v-for="channel in singleChannels" :key="channel.id"  @click="selectChannel(channel.id)" :class="{ active: channel.id === activeChannelId }">
+           <img :src="`https://ui-avatars.com/api/?name=${channel.recipient.fullname.replace(' ', '+')}`" class="avatar" alt="Avatar" /> {{ channel.recipient.fullname }}
+         </li>
       </ul>
     </div>
   </div>
@@ -51,6 +51,11 @@ export default {
     },
     channels() {
       return this.$store.getters.getChannels;
+    },
+    activeChannelId() {
+      const channel = this.$store.getters.getActiveChannel;
+      if (!channel) return null;
+      return channel.id;
     },
     singleChannels() {
       return this.$store.getters.getSingChannels;
@@ -76,6 +81,10 @@ export default {
         name: `Channel ${this.channels.length + 1}`,
       };
       this.$store.dispatch('addChannel', newChannel);
+    },
+    selectChannel(channelId) {
+      console.log('selectChannel', channelId);
+      this.$store.dispatch('setActiveChannel', channelId);
     },
   },
    mounted() {
@@ -223,6 +232,25 @@ export default {
 .direct-messages li:hover {
   background-color: #3a3e44;
 }
+
+/* Active channel styling */
+.channels li.active {
+  background-color: #5865f2; /* Highlight color for active channel */
+  color: #ffffff;
+}
+
+/* Direct Messages section */
+.direct-messages h2 {
+  font-size: 12px;
+  background-color: #3a3e44;
+}
+
+/* Active channel styling */
+.direct-messages li.active {
+  background-color: #5865f2; /* Highlight color for active channel */
+  color: #ffffff;
+}
+
 
 .avatar {
   width: 24px;
