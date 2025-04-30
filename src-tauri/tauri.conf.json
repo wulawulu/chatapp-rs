@@ -5,18 +5,12 @@
   "identifier": "com.chatapp.app",
   "build": {
     "beforeDevCommand": "yarn dev",
-    "devUrl": "http://localhost:1420",
+    "devUrl": "http://localhost:11420",
     "beforeBuildCommand": "yarn build",
     "frontendDist": "../dist"
   },
   "app": {
-    "windows": [
-      {
-        "title": "chatapp",
-        "width": 800,
-        "height": 600
-      }
-    ],
+    "windows": [],
     "security": {
       "csp": null
     }

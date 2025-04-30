@@ -1,12 +1,34 @@
+import { invoke } from '@tauri-apps/api/core';
+
 const URL_BASE = 'http://localhost:6688/api';
-const SSE_URL = 'http://localhost:6687/events';
+const SSE_URL = 'http://localhost:6687/events111';
+
+let config = null;
+try {
+    if (invoke) {
+        config = await invoke('get_config');
+    }
+} catch (error) {
+    console.error('Failed to get config:', error);
+}
 
 const getUrlBase = () => {
+    if (config && config.server.chat) {
+        return config.server.chat;
+    }
     return URL_BASE;
 }
 
+const getSseBase = () => {
+    if (config && config.server.notification) {
+        return config.server.notification;
+    }
+    return SSE_URL;
+}
+
 const initSSE = (store) => {
-    let url = `${SSE_URL}?token=${store.state.token}`;
+    let sse_base = getSseBase();
+    let url = `${sse_base}?token=${store.state.token}`;
     const sse = new EventSource(url);
 
     sse.addEventListener('NewMessage', (e) => {
