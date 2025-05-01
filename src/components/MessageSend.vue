@@ -1,16 +1,16 @@
 <template>
-  <div class="message-send">
+  <div class="flex items-center p-4 bg-white border-t border-gray-200">
     <input
       v-model="message"
       @keyup.enter="sendMessage"
       placeholder="Type a message..."
-      class="message-input"
+      class="flex-1 px-4 py-3 mr-2 text-sm bg-gray-100 border-none rounded-lg focus:outline-none"
       type="text"
     />
-    <button @click="sendMessage" class="send-button">
+    <button @click="sendMessage" class="p-2 text-white bg-blue-600 rounded-full hover:bg-blue-700 focus:outline-none">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        class="icon"
+        class="w-5 h-5"
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -34,8 +34,11 @@ export default {
     };
   },
   computed: {
+    userId() {
+      return this.$store.state.user.id;
+    },
     activeChannelId() {
-      const channel = this.$store.state.activeChannel;
+      let channel = this.$store.state.activeChannel;
       if (!channel) {
         return null;
       }
@@ -44,70 +47,22 @@ export default {
   },
   methods: {
     sendMessage() {
-      if (this.message.trim()==='')return;
+      if (this.message.trim() === '') return;
 
       const payload = {
         chatId: this.activeChannelId,
         content: this.message,
       };
 
-      try{
-        console.log('Sending message:', payload);
+      console.log('Sending message:', payload);
+
+      try {
         this.$store.dispatch('sendMessage', payload);
-        this.message = '';
-      }catch(error){
+        this.message = ''; // Clear the input after sending
+      } catch (error) {
         console.error('Failed to send message:', error);
       }
     },
   },
 };
 </script>
-
-<style scoped>
-/* Container styling */
-.message-send {
-  display: flex;
-  align-items: center;
-  padding: 10px 0px;
-  background-color: #fff;
-  border-top: 1px solid #eee;
-}
-
-/* Input field styling */
-.message-input {
-  flex: 1;
-  padding: 12px 12px;
-  border: none;
-  border-radius: 10px;
-  background-color: #eee;
-  font-size: 14px;
-  margin: 0px 10px;
-}
-
-.message-input::placeholder {
-  color: #72767d;
-}
-
-/* Send button styling */
-.send-button {
-  background-color: #5865f2;
-  border: none;
-  border-radius: 50%;
-  padding: 10px;
-  margin-right: 5px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-}
-
-.send-button .icon {
-  width: 20px;
-  height: 20px;
-}
-
-.send-button:hover {
-  background-color: #4752c4;
-}
-</style>
