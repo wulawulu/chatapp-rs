@@ -2,6 +2,7 @@ import { createStore } from 'vuex';
 import axios from 'axios';
 import { jwtDecode } from "jwt-decode";
 import { getUrlBase, initSSE } from '../utils';
+import { formatMessageDate } from '../utils'; // Add this import
 
 export default createStore({
   state: {
@@ -34,7 +35,12 @@ export default createStore({
       state.users = users;
     },
     setMessages(state, { channelId, messages }) {
-      state.messages[channelId] = messages;
+      // Format the date for each message before setting them in the state
+      const formattedMessages = messages.map(message => ({
+        ...message,
+        formattedCreatedAt: formatMessageDate(message.createdAt)
+      }));
+      state.messages[channelId] = formattedMessages.reverse();
     },
     addChannel(state, channel) {
       state.channels.push(channel);
@@ -42,8 +48,11 @@ export default createStore({
     },
     addMessage(state, { channelId, message }) {
       if (state.messages[channelId]) {
-        state.messages[channelId].unshift(message);
+        // Format the message date before adding it to the state
+        message.formattedCreatedAt = formatMessageDate(message.createdAt);
+        state.messages[channelId].push(message);
       } else {
+        message.formattedCreatedAt = formatMessageDate(message.createdAt);
         state.messages[channelId] = [message];
       }
     },
@@ -80,15 +89,15 @@ export default createStore({
     },
   },
   actions: {
-    initSSE({state,commit}){
-      if(state.sse){
+    initSSE({ state, commit }) {
+      if (state.sse) {
         state.sse.close();
       }
       const sse = initSSE(this);
       commit('setSSE', sse);
     },
-    closeSSE({state,commit}){
-      if(state.sse){
+    closeSSE({ state, commit }) {
+      if (state.sse) {
         state.sse.close();
         commit('setSSE', null);
       }
@@ -102,7 +111,7 @@ export default createStore({
           workspace
         });
 
-        const user = await loadState(response,this, commit);
+        const user = await loadState(response, this, commit);
 
         return user;
       } catch (error) {
@@ -117,7 +126,7 @@ export default createStore({
           password,
         });
 
-        const user = await loadState(response,this, commit);
+        const user = await loadState(response, this, commit);
         return user;
       } catch (error) {
         console.error('Login failed:', error);
@@ -169,7 +178,7 @@ export default createStore({
     async sendMessage({ state, commit }, payload) {
       try {
         console.log('Sending message:', payload);
-        const response = await axios.post(`${getUrlBase()}/chats/${payload.chatId}/messages`,payload,{
+        const response = await axios.post(`${getUrlBase()}/chats/${payload.chatId}/messages`, payload, {
           headers: {
             Authorization: `Bearer ${state.token}`,
           },
@@ -188,7 +197,7 @@ export default createStore({
     },
     loadUserState({ commit }) {
       commit('loadUserState');
-      if(this.state.token){
+      if (this.state.token) {
         this.dispatch('initSSE');
       }
     },

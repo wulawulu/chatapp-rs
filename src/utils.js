@@ -39,7 +39,8 @@ const initSSE = (store) => {
     });
 
     sse.onmessage = (e) => {
-        console.log('got event:', event);    }
+        console.log('got event:', event);
+    }
 
     sse.onerror = (e) => {
         console.error('EventSource failed:', error);
@@ -53,3 +54,19 @@ export {
     getUrlBase,
     initSSE
 };
+
+
+export function formatMessageDate(timestamp) {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+    const timeString = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    if (diffDays === 0) {
+        return timeString;
+    } else if (diffDays < 30) {
+        return `${timeString}, ${diffDays} ${diffDays === 1 ? 'day' : 'days'} ago`;
+    } else {
+        return `${timeString}, ${date.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' })}`;
+    }
+}
